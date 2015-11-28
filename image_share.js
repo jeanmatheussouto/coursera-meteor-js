@@ -1,23 +1,18 @@
+Images = new Mongo.Collection("images");
+
 if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
+  Template.images.helpers({images: Images.find()});
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
+  Template.images.events({
+    'click .js-image': function(event){
+      $(event.target).css("width", "100px");
+    },
+
+    'click .js-delete-image': function(event){
+      var image_id = this._id;
+      $("#" + image_id).hide('slow', function(){
+        Images.remove({"_id": image_id});
+      });
     }
-  });
-
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
-}
-
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
   });
 }
